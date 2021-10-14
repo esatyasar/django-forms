@@ -1,5 +1,6 @@
+from student.models import Student
 from .forms import StudentForm
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 
 def index(request):
@@ -8,7 +9,12 @@ def index(request):
 
 def student_page(request):
     form = StudentForm()
+    if request.method == 'POST':
+        form = StudentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('student')
     context = {
-        	'form': form
+        'form': form
     }
-    return render(request,'student/student.html', context)
+    return render(request, 'student/student.html', context)
